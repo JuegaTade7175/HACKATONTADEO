@@ -39,7 +39,6 @@ public class Vehicle {
     @Column(nullable = false)
     private Integer capacity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "driver_id")
+    @OneToOne(mappedBy = "vehicle", fetch = FetchType.LAZY)
     private Driver driver;
 }

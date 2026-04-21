@@ -7,6 +7,7 @@ import org.e2e.labe2e01.driver.infrastructure.DriverRepository;
 import org.e2e.labe2e01.vehicle.domain.Vehicle;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @Service
@@ -20,6 +21,9 @@ public class DriverService {
     }
 
     public Driver save(Driver driver) {
+        if (driver.getCreatedAt() == null) {
+            driver.setCreatedAt(ZonedDateTime.now());
+        }
         return driverRepository.save(driver);
     }
 
@@ -37,15 +41,15 @@ public class DriverService {
     }
 
     public Driver addVehicle(Long driverId, Vehicle vehicle) {
-            Driver driver = driverRepository.findById(driverId)
-                    .orElseThrow(() -> new RuntimeException("Driver not found with id: " + driverId));
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new RuntimeException("Driver not found with id: " + driverId));
 
-            if (vehicle.getCategory() == null) {
-                vehicle.setCategory(driver.getCategory());
-            }
-
-            vehicle.setDriver(driver);
-            driver.setVehicle(vehicle);
-            return driverRepository.save(driver);
+        if (vehicle.getCategory() == null) {
+            vehicle.setCategory(driver.getCategory());
         }
+
+        vehicle.setDriver(driver);
+        driver.setVehicle(vehicle);
+        return driverRepository.save(driver);
+    }
 }
